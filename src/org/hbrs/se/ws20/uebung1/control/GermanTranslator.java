@@ -13,7 +13,7 @@ public class GermanTranslator implements Translator {
 
 		try{
 			return values[number - 1];
-		} catch(Exception e){
+		} catch(Exception IndexOutOfBounds){
 			return "Übersetzung der Zahl " + number + " nicht möglich mit Version " + Translator.version;
 		}
 	}
