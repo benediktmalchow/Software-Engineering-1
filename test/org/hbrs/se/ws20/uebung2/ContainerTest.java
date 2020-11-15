@@ -67,4 +67,51 @@ class ContainerTest {
         c.deleteMember(42141241);
         assertEquals(0, c.size());
     }
+
+    @Test
+    void testComplete() throws ContainerException {
+        //This Method contains the same tests as above, this is just a coherant demonstration of all tests together
+        //create Container
+        c = new Container();
+
+        //test for empty store
+        assertEquals(0, c.size());
+
+        //add Members
+        c.addMember(m1);
+        c.addMember(m2);
+        c.addMember(m3);
+
+        //test size again
+        assertEquals(3, c.size());
+
+        //test adding same Object
+        assertThrows(ContainerException.class, () -> c.addMember(m1));
+        //test size again
+        assertEquals(3, c.size());
+        //remove objects
+        assertEquals("Remove of Member 2142141 successfull!", c.deleteMember(2142141));
+        assertEquals("Remove of Member 12412412 successfull!", c.deleteMember(12412412));
+        //try to remove non existing object
+        assertEquals("Remove of Member 46235232 not successfull!", c.deleteMember(46235232));
+        //test size again
+        assertEquals(1, c.size());
+        //print all objects
+        System.out.println("test complete: ");
+        c.dump();
+        //print stackstrace of ContainerException
+        try {
+            c.addMember(m2);
+        } catch (ContainerException e) {
+            e.printStackTrace();
+        }
+        //remove last object
+        assertEquals("Remove of Member 42141241 successfull!", c.deleteMember(42141241));
+        //check again size
+        assertEquals(0, c.size());
+
+
+
+
+    }
 }
