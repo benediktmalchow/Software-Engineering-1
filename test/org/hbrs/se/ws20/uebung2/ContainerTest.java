@@ -54,7 +54,6 @@ class ContainerTest {
     void dump() {
         System.out.println("dump method console test:");
         c.dump();
-
     }
 
     @Test

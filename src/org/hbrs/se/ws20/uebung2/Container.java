@@ -1,18 +1,22 @@
 package org.hbrs.se.ws20.uebung2;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Container {
 
-    private HashSet<Member> map = new HashSet<>();
+    //private HashSet<Member> map = new HashSet<>();
+
+    //Fuer Uebung 3 wird eine Liste gefordert
+    private List<Member> list = new ArrayList<>();
 
     public void addMember(Member member) throws ContainerException{
-        if(map.contains(member)){
+        if(list.contains(member)){
             ContainerException exception = new ContainerException();
             exception.addId(member.getID());
             throw exception;
         }
-
-        map.add(member);
+        list.add(member);
     }
 
     //Beantwortung Aufgabe 2.FA2
@@ -20,9 +24,9 @@ public class Container {
     //2. Fehlerbehandlung kann nicht weiterdeligiert werden wie z.B. bei geprüften Exceptions
     //3. Erschwertes Testen, da nicht auf Exceptions geprüft werden kann, sondern immer der eigene Fehlercode überprüft werden muss!
     public String deleteMember(Integer id){
-        for(Member m : map){
+        for(Member m : list){
             if(m.getID().equals(id)){
-                map.remove(m);
+                list.remove(m);
                 return "Remove of Member " + id + " successfull!";
             }
         }
@@ -30,13 +34,13 @@ public class Container {
     }
 
     public void dump(){
-        for(Member m : map){
+        for(Member m : list){
             System.out.println(m.toString());
         }
     }
 
     public int size(){
-        return map.size();
+        return list.size();
     }
 
 }
