@@ -4,12 +4,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Member> {
 
     private ObjectInputStream ois = null;
+    private ObjectOutputStream oos = null;
     private FileInputStream fis = null;
+    private FileOutputStream fos = null;
     private List<Member> newListe = null;
 
     @Override
@@ -18,6 +21,8 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
         try {
             fis = new FileInputStream("~/Desktop/members.ser");
             ois = new ObjectInputStream(fis);
+            fos = new FileOutputStream("~/Desktop/members.ser");
+            oos = new ObjectOutputStream(fos);
         } catch(IOException e) {
             System.err.println(e);
         }
@@ -29,7 +34,9 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
 
         try {
             fis.close();
+            fos.close();
             ois.close();
+            oos.close();
         } catch (IOException e) {
             System.err.println(e);
         }
@@ -39,8 +46,14 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
     /**
      * Method for saving a list of Member-objects to a disk (HDD)
      */
-    public void save(List<Member> member) throws PersistenceException  {
-
+    public void save(List<Member> member) throws PersistenceException {
+            openConnection();
+            try {
+                oos.writeObject(member);
+            } catch (IOException e) {
+                System.err.println(e);
+            }
+            closeConnection();
     }
 
     @Override
@@ -63,17 +76,15 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
         openConnection();
         try{
             Object obj = ois.readObject();
+            if (obj instanceof List<?>) {
+                newListe = (List) obj;
+            }
         } catch (IOException | ClassNotFoundException e) {
             System.err.println(e);
         }
-
-
-        // if (obj instanceof List<?>) {
-        //       newListe = (List) obj;
-        // return newListe
-
-        // and finally close the streams (guess where this could be...?)
         closeConnection();
         return newListe;
+
+        // and finally close the streams (guess where this could be...?)
     }
 }
