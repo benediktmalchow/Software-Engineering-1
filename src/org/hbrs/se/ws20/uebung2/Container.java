@@ -1,4 +1,7 @@
 package org.hbrs.se.ws20.uebung2;
+import org.hbrs.se.ws20.uebung3.persistence.PersistenceException;
+import org.hbrs.se.ws20.uebung3.persistence.PersistenceStrategy;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,14 +12,40 @@ public class Container {
 
     //Fuer Uebung 3 wird eine Liste gefordert
     private List<Member> list = new ArrayList<>();
+    private static Container reference = null;
+    private PersistenceStrategy<Member> strategy = null;
+
+    private Container(){}
+
+    public void setStrategy(PersistenceStrategy<Member> strategy) {
+        this.strategy = strategy;
+    }
+
+    public static Container createContainer(){
+
+        if(reference == null){
+            reference = new Container();
+        }
+        return reference;
+    }
 
     public void addMember(Member member) throws ContainerException{
-        if(list.contains(member)){
+        if(contains(member)){
             ContainerException exception = new ContainerException();
             exception.addId(member.getID());
             throw exception;
         }
         list.add(member);
+    }
+
+    private boolean contains(Member r) {
+        Integer ID = r.getID();
+        for ( Member rec : list) {
+            if ( rec.getID().intValue() == ID.intValue() ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Beantwortung Aufgabe 2.FA2
@@ -33,14 +62,25 @@ public class Container {
         return "Remove of Member " + id + " not successfull!";
     }
 
-    public void dump(){
-        for(Member m : list){
-            System.out.println(m.toString());
-        }
-    }
-
     public int size(){
         return list.size();
+    }
+
+    public List<Member> getCurrentList(){
+        return list;
+    }
+
+    public void store() throws PersistenceException {
+        strategy.save(list);
+    }
+
+    public void load() throws PersistenceException {
+        this.list = strategy.load();
+    }
+
+    //Helper method for tests
+    public void resetContainer(){
+        this.list = new ArrayList<>();
     }
 
 }

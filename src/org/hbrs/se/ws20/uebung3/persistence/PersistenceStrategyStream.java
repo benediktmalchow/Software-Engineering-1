@@ -1,18 +1,38 @@
 package org.hbrs.se.ws20.uebung3.persistence;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Member> {
+
+    private ObjectInputStream ois = null;
+    private FileInputStream fis = null;
+    private List<Member> newListe = null;
+
     @Override
     public void openConnection() throws PersistenceException {
+
+        try {
+            fis = new FileInputStream("~/Desktop/members.ser");
+            ois = new ObjectInputStream(fis);
+        } catch(IOException e) {
+            System.err.println(e);
+        }
 
     }
 
     @Override
     public void closeConnection() throws PersistenceException {
 
+        try {
+            fis.close();
+            ois.close();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
     }
 
     @Override
@@ -39,13 +59,21 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
         // ois = new ObjectInputStream(fis);
 
         // Reading and extracting the list (try .. catch ommitted here)
-        // Object obj = ois.readObject();
+
+        openConnection();
+        try{
+            Object obj = ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println(e);
+        }
+
 
         // if (obj instanceof List<?>) {
         //       newListe = (List) obj;
         // return newListe
 
         // and finally close the streams (guess where this could be...?)
-        return null;
+        closeConnection();
+        return newListe;
     }
 }
