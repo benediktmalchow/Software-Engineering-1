@@ -15,8 +15,8 @@ class ContainerTest {
 
     //Test with SingletonPattern
     private final Container c = Container.createContainer();
-    private final MemberView view =  new MemberView();
     private final PersistenceStrategyStream<Member> stream = new PersistenceStrategyStream<>();
+    private final MemberView view =  new MemberView();
     private MemberImplemented m1 = new MemberImplemented(2142141);
     private MemberImplemented m2 = new MemberImplemented(42141241);
     private MemberImplemented m3 = new MemberImplemented(12412412);
@@ -35,10 +35,18 @@ class ContainerTest {
 
     @Test
     public void testMongoDB(){
-        PersistenceStrategyMongoDB<Member> mongo = new PersistenceStrategyMongoDB<>();
-        c.setStrategy(mongo);
-        assertThrows(UnsupportedOperationException.class , c::store);
-        assertThrows(UnsupportedOperationException.class, c::load);
+
+        c.setStrategy(new PersistenceStrategyMongoDB<>());
+        try {
+            c.store();
+        } catch(PersistenceException e){
+            assertEquals(PersistenceException.ExceptionType.ImplementationNotAvailable, e.getExceptionTypeType());
+        }
+        try {
+            c.load();
+        } catch(PersistenceException e){
+            assertEquals(PersistenceException.ExceptionType.ImplementationNotAvailable, e.getExceptionTypeType());
+        }
     }
 
     @Test
@@ -96,12 +104,6 @@ class ContainerTest {
             c.load();
         } catch(PersistenceException e){
             assertEquals(PersistenceException.ExceptionType.NoStrategyIsSet,e.getExceptionTypeType());
-        }
-
-        try {
-            c.load();
-        } catch(PersistenceException e){
-            assertEquals(PersistenceException.ExceptionType.LoadFailure,e.getExceptionTypeType());
         }
     }
 
