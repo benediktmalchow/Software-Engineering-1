@@ -68,7 +68,10 @@ class ContainerTest {
         System.out.println("\nLoad old list from file (4 Members)");
         c.load();
         view.dump(c.getCurrentList());
+    }
 
+    public void testStoreException(){
+       // assertThrows(PersistenceException.class, () -> );
     }
 
     @Test

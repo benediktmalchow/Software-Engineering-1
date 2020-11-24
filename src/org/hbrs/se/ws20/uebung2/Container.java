@@ -74,12 +74,16 @@ public class Container {
         try {
             strategy.save(list);
         } catch(NullPointerException e) {
-            System.err.println("Strategy not set!");
+            throw new PersistenceException(PersistenceException.ExceptionType.NoStrategyIsSet, "No strategy found!");
         }
     }
 
-    public void load() throws PersistenceException, IOException, ClassNotFoundException {
-        this.list = strategy.load();
+    public void load() throws PersistenceException {
+        try{
+            this.list = strategy.load();
+        } catch (IOException | ClassNotFoundException e){
+            throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Load failure!");
+        }
     }
 
     //Helper method for tests

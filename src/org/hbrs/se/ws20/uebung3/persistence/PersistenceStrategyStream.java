@@ -14,14 +14,9 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
     public void openConnection() throws PersistenceException {
 
         try {
-            if(oos == null){
-                oos = new ObjectOutputStream(new FileOutputStream("members.ser"));
-            }
-            if(ois == null){
                 ois = new ObjectInputStream(new FileInputStream("members.ser"));
-            }
         } catch(IOException e) {
-            System.err.println(e);
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Connection not found!");
         }
 
     }
@@ -30,14 +25,9 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
     public void closeConnection() throws PersistenceException {
 
         try {
-            if(oos != null){
-                oos.close();
-            }
-            if(ois != null){
                 ois.close();
-            }
         } catch (IOException e) {
-            System.err.println(e);
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Connection not found!");
         }
     }
 
@@ -55,7 +45,7 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
             oos.close();
 
         } catch (IOException e) {
-            System.err.println(e);
+            throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Save failure!");
         }
     }
 
@@ -66,20 +56,22 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      * Method for loading a list of Member-objects from a disk (HDD)
      * Some coding examples come for free :-)
      */
-    public List<Member> load() throws PersistenceException, IOException, ClassNotFoundException {
+    public List<Member> load() throws PersistenceException {
 
+        try{
         newListe = new ArrayList<>();
-        ois = new ObjectInputStream(new FileInputStream("members.ser"));
-        try {
+        openConnection();
             while(true){
                 Object obj = ois.readObject();
                 newListe.add((Member) obj);
             }
         } catch (EOFException e) {
             System.out.println("End of Stream");
-            ois.close();
+        } catch (IOException | ClassNotFoundException e){
+            throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Error saving");
         }
 
+        closeConnection();
         return newListe;
     }
 }
