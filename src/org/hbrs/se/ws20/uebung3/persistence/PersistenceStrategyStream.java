@@ -1,6 +1,7 @@
 package org.hbrs.se.ws20.uebung3.persistence;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Member> {
@@ -47,11 +48,11 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
     public void save(List<Member> member) throws PersistenceException {
 
         try{
-            openConnection();
+            oos = new ObjectOutputStream(new FileOutputStream("members.ser"));
             for(Member m : member) {
                 oos.writeObject(m);
             }
-            closeConnection();
+            oos.close();
 
         } catch (IOException e) {
             System.err.println(e);
@@ -67,12 +68,18 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      */
     public List<Member> load() throws PersistenceException, IOException, ClassNotFoundException {
 
-        openConnection();
-        Object obj = ois.readObject();
-        if (obj instanceof List<?>) {
-            newListe = (List) obj;
+        newListe = new ArrayList<>();
+        ois = new ObjectInputStream(new FileInputStream("members.ser"));
+        try {
+            while(true){
+                Object obj = ois.readObject();
+                newListe.add((Member) obj);
+            }
+        } catch (EOFException e) {
+            System.out.println("End of Stream");
+            ois.close();
         }
-        closeConnection();
+
         return newListe;
     }
 }

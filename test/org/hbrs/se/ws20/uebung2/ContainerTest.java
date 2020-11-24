@@ -41,7 +41,7 @@ class ContainerTest {
     }
 
     @Test
-    public void testStoreLoad() throws PersistenceException, ContainerException {
+    public void testStoreLoad() throws PersistenceException, ContainerException, IOException, ClassNotFoundException {
         //Set PersistenceStrategyStream
         c.setStrategy(stream);
         System.out.println("Show current objects (3):\n");
@@ -51,15 +51,24 @@ class ContainerTest {
         System.out.println("\nAdd new object...\n");
         c.addMember(new MemberImplemented(32423));
         //Store m1, m2, m3 in "members.ser"
-        System.out.println("Store objects to file (4)\n ");
+        System.out.println("Store 4 objects to file\n ");
         c.store();
         System.out.println("Loading objects from File back... \n");
         //Load list from file
+        c.load();
         List<Member> list = c.getCurrentList();
         //show different output as before
         System.out.println("Show objects from file (4)\n");
         view.dump(list);
-        assertEquals(list, c.getCurrentList(), "Lists aren't equal");
+        System.out.println("\nDelete two objects from list");
+        c.deleteMember(2142141);
+        c.deleteMember(32423);
+        System.out.println("\nShow list again (2 Members)");
+        view.dump(c.getCurrentList());
+        System.out.println("\nLoad old list from file (4 Members)");
+        c.load();
+        view.dump(c.getCurrentList());
+
     }
 
     @Test
