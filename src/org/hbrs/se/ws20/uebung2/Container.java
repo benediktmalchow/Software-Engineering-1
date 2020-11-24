@@ -83,6 +83,8 @@ public class Container {
             this.list = strategy.load();
         } catch (IOException | ClassNotFoundException e){
             throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Load failure!");
+        } catch (NullPointerException e){
+            throw new PersistenceException(PersistenceException.ExceptionType.NoStrategyIsSet, "No strategy found!");
         }
     }
 
@@ -90,5 +92,6 @@ public class Container {
     public void resetContainer(){
         this.list = new ArrayList<>();
     }
+
 
 }

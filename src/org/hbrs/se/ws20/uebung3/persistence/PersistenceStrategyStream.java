@@ -68,9 +68,8 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
         } catch (EOFException e) {
             System.out.println("End of Stream");
         } catch (IOException | ClassNotFoundException e){
-            throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Error saving");
+            throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Load failure!");
         }
-
         closeConnection();
         return newListe;
     }

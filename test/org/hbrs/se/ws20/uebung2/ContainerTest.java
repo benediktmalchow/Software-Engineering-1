@@ -41,7 +41,7 @@ class ContainerTest {
     }
 
     @Test
-    public void testStoreLoad() throws PersistenceException, ContainerException, IOException, ClassNotFoundException {
+    public void testStoreLoad() throws PersistenceException, ContainerException {
         //Set PersistenceStrategyStream
         c.setStrategy(stream);
         System.out.println("Show current objects (3):\n");
@@ -70,8 +70,16 @@ class ContainerTest {
         view.dump(c.getCurrentList());
     }
 
+    @Test
     public void testStoreException(){
-       // assertThrows(PersistenceException.class, () -> );
+        c.setStrategy(null);
+       assertThrows(PersistenceException.class, () -> c.store());
+    }
+
+    @Test
+    public void testLoadException(){
+        c.setStrategy(null);
+        assertThrows(PersistenceException.class, () -> c.load());
     }
 
     @Test
