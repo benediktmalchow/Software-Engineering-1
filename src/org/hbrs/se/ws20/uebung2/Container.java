@@ -2,8 +2,8 @@ package org.hbrs.se.ws20.uebung2;
 import org.hbrs.se.ws20.uebung3.persistence.PersistenceException;
 import org.hbrs.se.ws20.uebung3.persistence.PersistenceStrategy;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Container {
@@ -71,10 +71,14 @@ public class Container {
     }
 
     public void store() throws PersistenceException {
-        strategy.save(list);
+        try {
+            strategy.save(list);
+        } catch(NullPointerException e) {
+            System.err.println("Strategy not set!");
+        }
     }
 
-    public void load() throws PersistenceException {
+    public void load() throws PersistenceException, IOException, ClassNotFoundException {
         this.list = strategy.load();
     }
 

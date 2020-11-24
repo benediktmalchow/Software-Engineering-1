@@ -15,5 +15,5 @@ public interface PersistenceStrategy<E> {
     public void openConnection() throws PersistenceException, IOException;
     public void closeConnection() throws PersistenceException;
     public void save(List<E> member) throws PersistenceException;
-    public List<E> load() throws PersistenceException;
+    public List<E> load() throws PersistenceException, IOException, ClassNotFoundException;
 }

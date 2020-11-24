@@ -1,6 +1,8 @@
 package org.hbrs.se.ws20.uebung2;
 
-public class MemberImplemented implements Member {
+import java.io.Serializable;
+
+public class MemberImplemented implements Member, Serializable {
 
 
     private Integer id;

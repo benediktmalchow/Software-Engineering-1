@@ -1,28 +1,24 @@
 package org.hbrs.se.ws20.uebung3.persistence;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.List;
 
 public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Member> {
 
     private ObjectInputStream ois = null;
     private ObjectOutputStream oos = null;
-    private FileInputStream fis = null;
-    private FileOutputStream fos = null;
     private List<Member> newListe = null;
 
     @Override
     public void openConnection() throws PersistenceException {
 
         try {
-            fis = new FileInputStream("~/Desktop/members.ser");
-            ois = new ObjectInputStream(fis);
-            fos = new FileOutputStream("~/Desktop/members.ser");
-            oos = new ObjectOutputStream(fos);
+            if(oos == null){
+                oos = new ObjectOutputStream(new FileOutputStream("members.ser"));
+            }
+            if(ois == null){
+                ois = new ObjectInputStream(new FileInputStream("members.ser"));
+            }
         } catch(IOException e) {
             System.err.println(e);
         }
@@ -33,10 +29,12 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
     public void closeConnection() throws PersistenceException {
 
         try {
-            fis.close();
-            fos.close();
-            ois.close();
-            oos.close();
+            if(oos != null){
+                oos.close();
+            }
+            if(ois != null){
+                ois.close();
+            }
         } catch (IOException e) {
             System.err.println(e);
         }
@@ -47,44 +45,34 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      * Method for saving a list of Member-objects to a disk (HDD)
      */
     public void save(List<Member> member) throws PersistenceException {
+
+        try{
             openConnection();
-            try {
-                oos.writeObject(member);
-            } catch (IOException e) {
-                System.err.println(e);
+            for(Member m : member) {
+                oos.writeObject(m);
             }
             closeConnection();
+
+        } catch (IOException e) {
+            System.err.println(e);
+        }
     }
+
+
 
     @Override
     /**
      * Method for loading a list of Member-objects from a disk (HDD)
      * Some coding examples come for free :-)
      */
-    public List<Member> load() throws PersistenceException  {
-        // Some Coding hints ;-)
-        // ObjectInputStream ois = null;
-        // FileInputStream fis = null;
-        // List<...> newListe =  null;
-        //
-        // Initiating the Stream (can also be moved to method openConnection()... ;-)
-        // fis = new FileInputStream( " a location to a file" );
-        // ois = new ObjectInputStream(fis);
-
-        // Reading and extracting the list (try .. catch ommitted here)
+    public List<Member> load() throws PersistenceException, IOException, ClassNotFoundException {
 
         openConnection();
-        try{
-            Object obj = ois.readObject();
-            if (obj instanceof List<?>) {
-                newListe = (List) obj;
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println(e);
+        Object obj = ois.readObject();
+        if (obj instanceof List<?>) {
+            newListe = (List) obj;
         }
         closeConnection();
         return newListe;
-
-        // and finally close the streams (guess where this could be...?)
     }
 }

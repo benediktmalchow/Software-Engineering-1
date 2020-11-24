@@ -1,6 +1,12 @@
 package org.hbrs.se.ws20.uebung2;
+import org.hbrs.se.ws20.uebung3.persistence.PersistenceException;
 import org.hbrs.se.ws20.uebung3.persistence.PersistenceStrategyMongoDB;
+import org.hbrs.se.ws20.uebung3.persistence.PersistenceStrategyStream;
 import org.junit.jupiter.api.*;
+
+import java.io.IOException;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -8,6 +14,8 @@ class ContainerTest {
 
     //Test with SingletonPattern
     private final Container c = Container.createContainer();
+    private final MemberView view =  new MemberView();
+    private final PersistenceStrategyStream<Member> stream = new PersistenceStrategyStream<>();
     private MemberImplemented m1 = new MemberImplemented(2142141);
     private MemberImplemented m2 = new MemberImplemented(42141241);
     private MemberImplemented m3 = new MemberImplemented(12412412);
@@ -30,6 +38,28 @@ class ContainerTest {
         c.setStrategy(mongo);
         assertThrows(UnsupportedOperationException.class , c::store);
         assertThrows(UnsupportedOperationException.class, c::load);
+    }
+
+    @Test
+    public void testStoreLoad() throws PersistenceException, ContainerException {
+        //Set PersistenceStrategyStream
+        c.setStrategy(stream);
+        System.out.println("Show current objects (3):\n");
+        //Test output of new Method dump in MemberView
+        view.dump(c.getCurrentList());
+        //add new Member
+        System.out.println("\nAdd new object...\n");
+        c.addMember(new MemberImplemented(32423));
+        //Store m1, m2, m3 in "members.ser"
+        System.out.println("Store objects to file (4)\n ");
+        c.store();
+        System.out.println("Loading objects from File back... \n");
+        //Load list from file
+        List<Member> list = c.getCurrentList();
+        //show different output as before
+        System.out.println("Show objects from file (4)\n");
+        view.dump(list);
+        assertEquals(list, c.getCurrentList(), "Lists aren't equal");
     }
 
     @Test
@@ -69,7 +99,7 @@ class ContainerTest {
     @Test
     void dump() {
         System.out.println("dump method console test:");
-        //c.dump();
+        view.dump(c.getCurrentList());
     }
 
     @Test
