@@ -58,7 +58,7 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      */
     public List<Member> load() throws PersistenceException {
 
-        try{
+        try {
         newListe = new ArrayList<>();
         openConnection();
             while(true){

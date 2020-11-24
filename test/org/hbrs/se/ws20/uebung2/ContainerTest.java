@@ -4,6 +4,7 @@ import org.hbrs.se.ws20.uebung3.persistence.PersistenceStrategyMongoDB;
 import org.hbrs.se.ws20.uebung3.persistence.PersistenceStrategyStream;
 import org.junit.jupiter.api.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -73,13 +74,35 @@ class ContainerTest {
     @Test
     public void testStoreException(){
         c.setStrategy(null);
-       assertThrows(PersistenceException.class, () -> c.store());
+        try {
+            c.store();
+        } catch(PersistenceException e){
+            assertEquals(PersistenceException.ExceptionType.NoStrategyIsSet, e.getExceptionTypeType());
+        }
+
+        c.setStrategy(stream);
+        c.resetContainer();
+        try {
+            c.store();
+        } catch(PersistenceException e) {
+            assertEquals(PersistenceException.ExceptionType.SaveFailure, e.getExceptionTypeType());
+        }
     }
 
     @Test
     public void testLoadException(){
         c.setStrategy(null);
-        assertThrows(PersistenceException.class, () -> c.load());
+        try {
+            c.load();
+        } catch(PersistenceException e){
+            assertEquals(PersistenceException.ExceptionType.NoStrategyIsSet,e.getExceptionTypeType());
+        }
+
+        try {
+            c.load();
+        } catch(PersistenceException e){
+            assertEquals(PersistenceException.ExceptionType.LoadFailure,e.getExceptionTypeType());
+        }
     }
 
     @Test
