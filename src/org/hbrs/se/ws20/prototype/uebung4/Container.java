@@ -68,7 +68,7 @@ public class Container {
 		Scanner scanner = new Scanner( System.in );
 
 		// Ausgabe eines Texts zur Begruessung
-		System.out.println("Prio-Tool V1.5 by Julius P. (dedicated to all my friends)");
+		System.out.println("Top Secret Prio-Tool V1.5");
 
 		while ( true ) {
 			System.out.print( "> "  );
