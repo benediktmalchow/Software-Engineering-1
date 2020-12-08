@@ -29,7 +29,6 @@ public class InputDialog {
         Scanner scanner = new Scanner( System.in );
 
         System.out.println(TEXT_RED + "Prio-Tool V1.5" + TEXT_CYAN);
-
         while ( true ) {
             System.out.print( TEXT_RED + "> " + TEXT_CYAN);
             strInput = scanner.nextLine();
