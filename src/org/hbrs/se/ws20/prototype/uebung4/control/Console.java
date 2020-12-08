@@ -49,9 +49,9 @@ public class Console {
                 if(line > 0 && (console.contains("Effort") || console.contains("UserStory"))) {
                     return line;
                 } else if(line < 0){
-                    throw new IllegalArgumentException("Number have to be positive!");
-                } else if(line > 5 || line < 1 && (console.contains("Added value") || console.contains("Penalty") || console.contains("Risk"))){
-                    throw new IllegalArgumentException("Number have to be between 1-5!");
+                    throw new IllegalArgumentException("Number has to be positive!");
+                } else if((line > 5 || line < 1) && (console.contains("Added value") || console.contains("Penalty") || console.contains("Risk"))){
+                    throw new IllegalArgumentException("Number has to be between 1-5!");
                 }
             } catch (InputMismatchException e) {
                 sc.next();

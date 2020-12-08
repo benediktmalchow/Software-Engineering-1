@@ -40,4 +40,8 @@ public class PersistenceStrategyMongoDB<UserStory> implements PersistenceStrateg
             throw new PersistenceException(PersistenceException.ExceptionType.ImplementationNotAvailable, "Not implemented!");
         }
     }
+
+    public String getName(){
+        return "MongoDB";
+    }
 }

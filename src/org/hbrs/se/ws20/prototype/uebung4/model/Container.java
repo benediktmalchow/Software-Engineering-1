@@ -35,7 +35,16 @@ public class Container {
 		} catch (NullPointerException e) {
 			System.out.println("Strategy not set!");
 		}
+	}
 
+	public List<UserStory> mergeload() throws IOException, PersistenceException, ClassNotFoundException {
+		try{
+			return strategy.load();
+		} catch (NullPointerException e) {
+			System.out.println("Strategy not set!");
+		}
+
+		return null;
 	}
 
 	public void store() throws ContainerException, PersistenceException {
@@ -72,13 +81,17 @@ public class Container {
 		return this.list;
 	}
 
-	private UserStory getUserStory(int id) {
+	public UserStory getUserStory(int id) {
 		for ( UserStory rec : list) {
 			if (id == rec.getId() ){
 				return rec;
 			}
 		}
 		return null;
+	}
+
+	public void deleteUserStory(int id){
+		this.list.remove(getUserStory(id));
 	}
 
 

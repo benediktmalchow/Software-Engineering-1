@@ -65,4 +65,8 @@ public class PersistenceStrategyStream<UserStory> implements PersistenceStrategy
         return list;
     }
 
+    public String getName(){
+        return "hdd";
+    }
+
 }

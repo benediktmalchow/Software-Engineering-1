@@ -16,4 +16,5 @@ public interface PersistenceStrategy<E> {
     public void closeConnection() throws PersistenceException;
     public void save(List<E> story) throws PersistenceException, ContainerException;
     public List<E> load() throws PersistenceException, IOException, ClassNotFoundException;
+    public String getName();
 }
