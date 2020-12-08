@@ -1,4 +1,4 @@
-package org.hbrs.se.ws20.solutions.uebung3.persistence;
+package org.hbrs.se.ws20.prototype.uebung4.model;
 
 public class PersistenceException extends Exception {
 
@@ -8,7 +8,7 @@ public class PersistenceException extends Exception {
         return this.exceptionType;
     }
 
-    public PersistenceException( ExceptionType exceptionType, String message) {
+    public PersistenceException(ExceptionType exceptionType, String message) {
         super(message);
         this.exceptionType = exceptionType;
     }
@@ -21,6 +21,6 @@ public class PersistenceException extends Exception {
      * of Type 'ImplementationNotAvailable'. Re-throw the new exception e.g. to a client
      */
     public enum ExceptionType {
-        ImplementationNotAvailable, ConnectionNotAvailable, NoStrategyIsSet, SaveFailure, LoadFailure, ClosingFailure
+        ImplementationNotAvailable, ConnectionNotAvailable, NoStrategyIsSet, SaveFailure, LoadFailure
     }
 }
