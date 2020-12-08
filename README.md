@@ -1,3 +1,3 @@
 # Software-Engineering-1
 
-Uebung 1
+Übungsabgaben für Software Engineering 1
